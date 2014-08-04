@@ -2,12 +2,15 @@
  * Author: Yves Van Broekhoven & Simon Menke
  * Created at: 2012-07-05
  *
+ * Fork: Andy Thomas (http://and.yt)
+ * Fork Created at: 2014-08-04
+ *
  * Requirements:
  * - jQuery
  * - jQuery UI
  * - Chosen
  *
- * Version: 1.0.0
+ * Version: 1.0.1
  */
 (function($) {
   $.fn.chosenClassPrefix = function() {
