@@ -4,6 +4,7 @@
  *
  * Fork: Andy Thomas (http://and.yt)
  * Fork Created at: 2014-08-04
+ * Fork URL: https://github.com/antom/jquery-chosen-sortable
  *
  * Requirements:
  * - jQuery
