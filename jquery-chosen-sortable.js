@@ -10,12 +10,17 @@
  * Version: 1.0.0
  */
 (function($) {
+  $.fn.chosenClassPrefix = function() {
+    return $(this).is('[class^="chzn-"]')
+      ? 'chzn'
+      : 'chosen';
+  };
 
   $.fn.chosenOrder = function() {
-    var $this   = this.filter('.chzn-sortable[multiple]').first(),
-        $chosen = $this.siblings('.chzn-container');
+    var $this   = this.filter('.' + this.chosenClassPrefix() + '-sortable[multiple]').first(),
+        $chosen = $this.siblings('.' + this.chosenClassPrefix() + '-container');
 
-    return $($chosen.find('.chzn-choices li[class!="search-field"]').map( function() {
+    return $($chosen.find('.' + this.chosenClassPrefix() + '-choices li[class!="search-field"]').map( function() {
       if (!this) {
         return undefined;
       }
@@ -27,35 +32,44 @@
   /*
    * Extend jQuery
    */
-  $.fn.chosenSortable = function(){
-    var $this = this.filter('.chzn-sortable[multiple]');
+  $.fn.chosenSortable = function() {
+    var $this = this.filter('.' + this.chosenClassPrefix() + '-sortable[multiple]');
 
     $this.each(function(){
       var $select = $(this);
-      var $chosen = $select.siblings('.chzn-container');
+      var $chosen = $select.siblings('.' + $select.chosenClassPrefix() + '-container');
 
-      // On mousedown of choice element,
-      // we don't want to display the dropdown list
-      $chosen.find('.chzn-choices').bind('mousedown', function(event){
-        if ($(event.target).is('span')) {
-          event.stopPropagation();
+      if ($.ui) {
+        // On mousedown of choice element,
+        // we don't want to display the dropdown list
+        $chosen.find('.' + $select.chosenClassPrefix() + '-choices').bind('mousedown', function(event){
+          if ($(event.target).is('span')) {
+            event.stopPropagation();
+          }
+        });
+
+        // Initialize jQuery UI Sortable
+        $chosen.find('.' + $select.chosenClassPrefix() + '-choices').sortable({
+          placeholder: 'search-choice-placeholder',
+          items: 'li:not(.search-field)',
+          tolerance: 'pointer',
+          start: function(e,ui) {
+            ui.placeholder.width(ui.item.innerWidth());
+            ui.placeholder.height(ui.item.innerHeight());
+          }
+        });
+
+        // Intercept form submit & order the chosens
+        if ($select.closest('form')) {
+          $select.closest('form').bind('submit', function(){
+            var $options = $select.chosenOrder();
+            $select.children().remove();
+            $select.append($options);
+          });
         }
-      });
-
-      // Initialize jQuery UI Sortable
-      $chosen.find('.chzn-choices').sortable({
-        'placeholder' : 'ui-state-highlight',
-        'items'       : 'li:not(.search-field)',
-        //'update'      : _update,
-        'tolerance'   : 'pointer'
-      });
-
-      // Intercept form submit & order the chosens
-      $select.closest('form').on('submit', function(){
-        var $options = $select.chosenOrder();
-        $select.children().remove();
-        $select.append($options);
-      });
+      } else {
+        console.error('jquery-chosen-sortable requires JQuery UI to have been initialised.');
+      }
 
     });
 
