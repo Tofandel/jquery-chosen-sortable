@@ -13,6 +13,10 @@ The fork adds the following features not found in the original:
 - Checks that JQuery UI is loaded.
 - Sizes the placeholder equal to the option being dragged.
 
+### Demos ###
+
+You can find demos for both the old (v0.9.7) and new (v1.1.0) versions of Chosen [here](http://antom.github.io/jquery-chosen-sortable).
+
 ### Usage ###
 
 Simply add the additional `chosen-sortable` class to any `<select multiple>` tag on your page and make sure that you include both JQuery UI and this plugin, eg:
